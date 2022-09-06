@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.doitedu</groupId>
+    <artifactId>spark-31</artifactId>
+    <version>1.0</version>
+
+
+    <!-- 指定jdk的版本 -->
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <encoding>UTF-8</encoding>
+        <scala.version>2.12.15</scala.version>
+        <scala.compat.version>2.12</scala.compat.version>
+        <akka.version>2.4.17</akka.version>
+    </properties>
+
+    <dependencies>
+        <!-- scala的依赖 -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+
+        <!-- spark core 即为spark内核 ，其他高级组件都要依赖spark core -->
+        <!-- spark-sql底层依赖spark-core -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.12</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        <!-- spark sql 跟hive整合的依赖 -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-hive_2.12</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <!-- spark streaming的依赖，增强的Driver，增强的分布式数据集DStream -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming_2.12</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <!-- sparkstreaming 与 Kafka整合的依赖 -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming-kafka-0-10_2.12</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <!-- 解析JSON的依赖 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.57</version>
+        </dependency>
+
+        <!-- mysql连接依赖 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.49</version>
+        </dependency>
+
+        <!-- 往hbase中写入数据的客户端 -->
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>2.2.6</version>
+        </dependency>
+
+        <!-- 导入httpClient，发送http情况的客户端 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.7</version>
+        </dependency>
+
+        <!-- 通过java访问redis驱动 -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>4.2.3</version>
+        </dependency>
+
+
+    </dependencies>
+
+    <!--    &lt;!&ndash; 配置Maven的镜像库 &ndash;&gt;-->
+    <!--    &lt;!&ndash; 依赖下载国内镜像库 &ndash;&gt;-->
+    <!--    <repositories>-->
+    <!--        <repository>-->
+    <!--            <id>nexus-aliyun</id>-->
+    <!--            <name>Nexus aliyun</name>-->
+    <!--            <layout>default</layout>-->
+    <!--            <url>http://maven.aliyun.com/nexus/content/groups/public</url>-->
+    <!--            <snapshots>-->
+    <!--                <enabled>false</enabled>-->
+    <!--                <updatePolicy>never</updatePolicy>-->
+    <!--            </snapshots>-->
+    <!--            <releases>-->
+    <!--                <enabled>true</enabled>-->
+    <!--                <updatePolicy>never</updatePolicy>-->
+    <!--            </releases>-->
+    <!--        </repository>-->
+    <!--    </repositories>-->
+
+    <!--    &lt;!&ndash; maven插件下载国内镜像库 &ndash;&gt;-->
+    <!--    <pluginRepositories>-->
+    <!--        <pluginRepository>-->
+    <!--            <id>ali-plugin</id>-->
+    <!--            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>-->
+    <!--            <snapshots>-->
+    <!--                <enabled>false</enabled>-->
+    <!--                <updatePolicy>never</updatePolicy>-->
+    <!--            </snapshots>-->
+    <!--            <releases>-->
+    <!--                <enabled>true</enabled>-->
+    <!--                <updatePolicy>never</updatePolicy>-->
+    <!--            </releases>-->
+    <!--        </pluginRepository>-->
+    <!--    </pluginRepositories>-->
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- 编译scala的插件 -->
+                <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>3.2.2</version>
+                </plugin>
+                <!-- 编译java的插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.5.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 打jar插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+
+</project>
